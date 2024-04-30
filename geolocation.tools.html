@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Geolocation OSINT Tools</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+    </style>
+    <script>
+        function populateFilters() {
+            const table = document.getElementById("toolTable");
+            const categoryFilter = document.getElementById("categoryFilter");
+
+            const uniqueCategories = new Set();
+
+            for (let i = 1; i < table.rows.length; i++) {
+                const category = table.rows[i].cells[1].innerText;
+                uniqueCategories.add(category);
+            }
+
+            uniqueCategories.forEach(category => {
+                const option = document.createElement("option");
+                option.text = category;
+                categoryFilter.add(option);
+            });
+        }
+
+        function filterTable() {
+            const table = document.getElementById("toolTable");
+            const selectedCategory = document.getElementById("categoryFilter").value;
+            const searchText = document.getElementById("searchInput").value.toLowerCase();
+
+            for (let i = 1; i < table.rows.length; i++) {
+                const cells = table.rows[i].cells;
+                let textMatch = false;
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j].innerText.toLowerCase().includes(searchText)) {
+                        textMatch = true;
+                        break;
+                    }
+                }
+
+                const category = cells[1].innerText;
+                const categoryMatch = (selectedCategory === "Alle" || category === selectedCategory);
+
+                table.rows[i].style.display = (categoryMatch && textMatch) ? "" : "none";
+            }
+        }
+
+        window.onload = populateFilters;
+    </script>
+</head>
+<body>
+    <h1>Geolocation OSINT Tools</h1>
+
+    <label for="searchInput">Suche:</label>
+    <input type="text" id="searchInput" oninput="filterTable()">
+
+    <label for="categoryFilter">Filter nach Kategorie:</label>
+    <select id="categoryFilter" onchange="filterTable()">
+        <option>Alle</option>
+    </select>
+
+    <table id="toolTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Kategorie</th>
+                <th>Webseite</th>
+                <th>Kommentar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Tool A</td>
+                <td>IP Analyse</td>
+                <td><a href="http://example.com">Webseite</a></td>
+                <td>Sehr nützlich für IP-Standortverfolgung</td>
+            </tr>
+            <tr>
+                <td>Tool B</td>
+                <td>Satellitenbilder</td>
+                <td><a href="http://example2.com">Webseite</a></td>
+                <td>Detailreiche Satellitenbilder und -daten</td>
+            </tr>
+            <tr>
+                <td>Tool C</td>
+                <td>Standortnetzwerkanalyse</td>
+                <td><a href="http://example3.com">Webseite</a></td>
+                <td>Netzwerkanalyse für geographische Daten</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
